@@ -2,10 +2,12 @@ name: insightface
 channels:
   - nvidia
   - defaults
+  - conda-forge
 dependencies:
   - _libgcc_mutex=0.1=main
   - _openmp_mutex=5.1=1_gnu
-  - ca-certificates=2023.12.12=h06a4308_0
+  - bzip2=1.0.8=h7f98852_4
+  - ca-certificates=2023.11.17=hbcca054_0
   - cuda=11.8.0=0
   - cuda-cccl=11.8.89=0
   - cuda-command-line-tools=11.8.0=0
@@ -39,7 +41,12 @@ dependencies:
   - cuda-toolkit=11.8.0=0
   - cuda-tools=11.8.0=0
   - cuda-visual-tools=11.8.0=0
+  - ffmpeg=4.3.2=hca11adc_0
+  - freetype=2.10.4=h0708190_1
   - gds-tools=1.8.1.2=0
+  - gmp=6.2.1=h58526e2_0
+  - gnutls=3.6.13=h85f3911_1
+  - lame=3.100=h7f98852_1001
   - ld_impl_linux-64=2.38=h1181459_1
   - libcublas=11.11.3.6=0
   - libcublas-dev=11.11.3.6=0
@@ -60,9 +67,12 @@ dependencies:
   - libnpp-dev=12.2.3.2=0
   - libnvjpeg=12.3.0.81=0
   - libnvjpeg-dev=12.3.0.81=0
+  - libpng=1.6.37=h21135ba_2
   - libstdcxx-ng=11.2.0=h1234567_1
   - ncurses=6.4=h6a678d5_0
+  - nettle=3.6=he412f7d_0
   - nsight-compute=2023.3.1.1=0
+  - openh264=2.1.1=h780b84a_0
   - openssl=3.0.12=h7f8727e_0
   - pip=23.3.1=py39h06a4308_0
   - python=3.9.18=h955ad1f_0
@@ -72,6 +82,7 @@ dependencies:
   - tk=8.6.12=h1ccaba5_0
   - tzdata=2023d=h04d1e81_0
   - wheel=0.41.2=py39h06a4308_0
+  - x264=1!161.3030=h7f98852_1
   - xz=5.4.5=h5eee18b_0
   - zlib=1.2.13=h5eee18b_0
   - pip:
@@ -209,3 +220,4 @@ dependencies:
       - websocket-client==1.7.0
       - widgetsnbextension==4.0.9
       - zipp==3.17.0
+prefix: /home/ec2-user/anaconda3/envs/insightface
