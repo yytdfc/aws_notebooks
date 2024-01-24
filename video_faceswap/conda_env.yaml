@@ -220,4 +220,3 @@ dependencies:
       - websocket-client==1.7.0
       - widgetsnbextension==4.0.9
       - zipp==3.17.0
-prefix: /home/ec2-user/anaconda3/envs/insightface
