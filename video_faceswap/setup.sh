@@ -1,5 +1,6 @@
 #! /bin/bash
 
+cd /home/ec2-user/SageMaker
 git clone https://github.com/yytdfc/aws_notebooks.git
 cd aws_notebooks/video_faceswap
 conda env create -f conda_env.yaml
