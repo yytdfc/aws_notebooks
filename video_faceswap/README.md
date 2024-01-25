@@ -16,15 +16,3 @@ git clone https://github.com/yytdfc/aws_notebooks.git
 4. Run all cells, and the video is processed, and the output is shown on the notebook.
 
 Enjoy!
-
-
-## Samples:
-
-- input:
-
-<video src="https://github.com/yytdfc/aws_notebooks/raw/master/video_faceswap/test_video.mp4" height="320" controls></video>
-<video src='video1.mov' width=720/>
-
-- output:
-
-<video src="https://github.com/yytdfc/aws_notebooks/raw/master/video_faceswap/test_video_output.mp4" height="320" controls></video>
