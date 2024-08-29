@@ -1,0 +1,23 @@
+ARG VLLM_VERSION
+FROM vllm/vllm-openai:$VLLM_VERSION
+
+# 设置工作目录
+WORKDIR /app
+
+# 安装必要的包
+RUN sed -i 's|/v1/chat/completions|/invocations|g' /usr/local/lib/python3.10/dist-packages/vllm/entrypoints/openai/api_server.py; \
+    sed -i 's|/health|/ping|g' /usr/local/lib/python3.10/dist-packages/vllm/entrypoints/openai/api_server.py;
+
+# 复制当前目录下的内容到容器内的/app
+COPY app/ /app
+
+# 让端口8080在容器外可用
+EXPOSE 8080
+
+# 定义环境变量
+ENV PATH="/app:${PATH}"
+
+# 运行serve
+ENTRYPOINT []
+CMD ["serve"]
+
