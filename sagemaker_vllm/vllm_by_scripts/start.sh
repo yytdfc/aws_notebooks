@@ -1,8 +1,9 @@
 #!/bin/bash
 
-# port needs to be 8080
+# port needs to be $SAGEMAKER_BIND_TO_PORT
 
 python3 -m vllm.entrypoints.openai.api_server \
-    --port 8080 \
+    --port $SAGEMAKER_BIND_TO_PORT \
     --trust-remote-code \
-    --model deepseek-ai/deepseek-coder-1.3b-instruct
+    --max-model-len 8192 \
+    --model deepseek-ai/deepseek-coder-6.7b-instruct
