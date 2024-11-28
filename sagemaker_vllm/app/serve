@@ -53,7 +53,7 @@ else
             echo "model found: $model_id"
             python3 -m vllm.entrypoints.openai.api_server \
             --port $SAGEMAKER_BIND_TO_PORT $ \
-            --download_dir $base_dir \
+            --file_dir $base_dir \
             --trust-remote-code \
             --model $model_id
         fi
