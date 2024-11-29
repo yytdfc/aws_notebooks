@@ -65,16 +65,21 @@ public class BedrockService {
                         int i = 0;
                         while(i < chunk.length()){
                             String sub_chunk = chunk.substring(i);
-                            // Extract JSON part after "message-typeevent"
-                            int jsonStart = sub_chunk.indexOf("event{");
-                            if (jsonStart == -1) {
+                            int eventStart = sub_chunk.indexOf(":message-type\u0007\u0000\u0005event{\"bytes\"");
+                            if (eventStart == -1) {
                                 break;
                             }
-                            int jsonEnd = sub_chunk.lastIndexOf("}");
+                            int eventEnd = sub_chunk.substring(eventStart).indexOf(":event-type\u0007\u0000\u0005chunk");
+                            if (eventEnd == -1) {
+                                break;
+                            }
+                            String eventString = sub_chunk.substring(eventStart, eventStart + eventEnd);
+                            int jsonStart = 21;
+                            int jsonEnd = eventString.indexOf("\"}");
                             if (jsonEnd == -1) {
                                 break;
                             }
-                            String jsonStr = sub_chunk.substring(jsonStart + 5, jsonEnd + 1);
+                            String jsonStr = eventString.substring(jsonStart, jsonEnd + 2);
                             JsonNode jsonNode = objectMapper.readTree(jsonStr);
                             
                             if (jsonNode.has("bytes")) {
@@ -94,7 +99,7 @@ public class BedrockService {
                                     // Handle other message types if needed
                                 }
                             }
-                            i += jsonEnd + 1;
+                            i += eventStart + eventEnd;
                         }
                         if(i < chunk.length()){
                             incompleteChunk.append(chunk.substring(i));
