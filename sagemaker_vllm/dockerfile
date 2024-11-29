@@ -38,10 +38,11 @@ sed -i '/def _maybe_get_adapters/,/:$/!b;/:$/a\
 \        if request.model is None:\n\
 \            return None, None\n\
 ' ${PYTHON_SITEPACKAGES}/vllm/entrypoints/openai/serving_engine.py; \
-apt install unzip; \
-curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"; \
-unzip awscliv2.zip; rm awscliv2.zip; \
-sudo ./aws/install; rm -rf ./aws; \
+curl -L -O "https://github.com/peak/s5cmd/releases/download/v2.2.2/s5cmd_2.2.2_Linux-64bit.tar.gz"; \
+tar zxvf s5cmd_2.2.2_Linux-64bit.tar.gz; \
+rm s5cmd_2.2.2_Linux-64bit.tar.gz; \
+mv s5cmd /app/s5cmd; \
+chmod +x /app/s5cmd; \
 chmod +x /app/serve
 
 # 让端口8080在容器外可用
