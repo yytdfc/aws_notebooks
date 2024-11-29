@@ -22,6 +22,7 @@ public class BedrockService {
     private final String endpoint;
     private final String modelId;
     private final ObjectMapper objectMapper;
+    private StringBuilder incompleteChunk = new StringBuilder(); // Buffer for incomplete chunks
 
     public BedrockService(
             @Value("${aws.access-key}") String accessKey,
@@ -41,6 +42,7 @@ public class BedrockService {
         String apiUrl = endpoint + "/model/" + modelId + "/invoke-with-response-stream";
         System.out.println(apiUrl);
         System.out.println(requestBody);
+        incompleteChunk.setLength(0);
 
         return webClient.method(HttpMethod.POST)
                 .uri(apiUrl)
@@ -54,22 +56,25 @@ public class BedrockService {
                     dataBuffer.read(bytes);
                     String chunk = new String(bytes, StandardCharsets.UTF_8);
                     try {
-                        // Split the chunk by newlines in case we receive multiple events
-                        String[] events = chunk.split("\n");
-                        StringBuilder output = new StringBuilder();
+                        // Prepend any incomplete chunk from previous iteration
+                        chunk = incompleteChunk.toString() + chunk;
+                        incompleteChunk.setLength(0); // Clear the buffer
                         
-                        for (String event : events) {
-                            if (event.trim().isEmpty()) continue;
-                            
+                        // Split the chunk by newlines in case we receive multiple events
+                        StringBuilder output = new StringBuilder();
+                        int i = 0;
+                        while(i < chunk.length()){
+                            String sub_chunk = chunk.substring(i);
                             // Extract JSON part after "message-typeevent"
-                            int jsonStart = event.indexOf("event{");
-                            if (jsonStart == -1) continue;
-                            
-                            // Find the end of JSON by looking for the last '}'
-                            int jsonEnd = event.lastIndexOf("}");
-                            if (jsonEnd == -1) continue;
-                            
-                            String jsonStr = event.substring(jsonStart + 5, jsonEnd + 1);
+                            int jsonStart = sub_chunk.indexOf("event{");
+                            if (jsonStart == -1) {
+                                break;
+                            }
+                            int jsonEnd = sub_chunk.lastIndexOf("}");
+                            if (jsonEnd == -1) {
+                                break;
+                            }
+                            String jsonStr = sub_chunk.substring(jsonStart + 5, jsonEnd + 1);
                             JsonNode jsonNode = objectMapper.readTree(jsonStr);
                             
                             if (jsonNode.has("bytes")) {
@@ -89,6 +94,10 @@ public class BedrockService {
                                     // Handle other message types if needed
                                 }
                             }
+                            i += jsonEnd + 1;
+                        }
+                        if(i < chunk.length()){
+                            incompleteChunk.append(chunk.substring(i));
                         }
                         return output.toString();
                     } catch (Exception e) {
