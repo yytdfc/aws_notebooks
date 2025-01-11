@@ -1,0 +1,39 @@
+### model
+model_name_or_path: /tmp/initial-model-path/
+
+### method
+stage: sft
+do_train: true
+finetuning_type: full
+deepspeed: /opt/ml/code/LLaMA-Factory/examples/deepspeed/ds_z3_offload_config.json
+
+### dataset
+dataset_dir: /tmp/finetune_dataset/
+dataset: train
+template: llama3
+cutoff_len: 2048
+overwrite_cache: true
+preprocessing_num_workers: 16
+
+### output
+output_dir: /tmp/tuned-model-path/
+logging_steps: 5
+save_steps: 500
+plot_loss: true
+overwrite_output_dir: true
+
+### train
+per_device_train_batch_size: 4
+gradient_accumulation_steps: 1
+learning_rate: 1.0e-5
+num_train_epochs: 2.0
+lr_scheduler_type: cosine
+warmup_ratio: 0.1
+bf16: true
+ddp_timeout: 180000000
+
+### eval
+val_size: 0.1
+per_device_eval_batch_size: 1
+eval_strategy: steps
+eval_steps: 500
