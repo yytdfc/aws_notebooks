@@ -52,6 +52,7 @@ def detection(image, category_input, model_choice, image_short_size=360):
     modelId = model_choice
     
     # 解析类别列表
+    category_input = category_input.replace("，", ",")
     category_list = [cat.strip() for cat in category_input.split(",")]
     if not category_list or category_list[0] == "":
         return None, "请输入至少一个检测类别"
@@ -82,7 +83,7 @@ def detection(image, category_input, model_choice, image_short_size=360):
         category_str = ",".join([f'"{category.lower()}"' for category in category_list])
         
         prompts = f"""
-Detect bounding box of objects in the image, only detect {category_str} category objects with high confidence, output in a list of bounding box format.
+Detect bounding box of objects in the image, only detect {category_str} category objects with high confidence, output in a list of bounding box format. If the object not in {category_str}, use "others" instead.
         
 Output example:
         
@@ -157,7 +158,9 @@ Output example:
         
         log_output = []
         for idx, item in enumerate(result):
-            label = next(iter(item))
+            label = next(iter(item)).strip()
+            if label == "others" or label == "other":
+                continue
             bbox = item[label]
             x1, y1, x2, y2 = bbox
             
