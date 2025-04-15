@@ -1,0 +1,14 @@
+ARG REGION=us-west-2
+
+FROM 763104351884.dkr.ecr.${REGION}.amazonaws.com/djl-inference:0.31.0-lmi13.0.0-cu124
+
+# 安装依赖
+RUN mkdir -p /opt/code && cd /opt/code \
+&&  git clone https://github.com/Tencent/Hunyuan3D-2.git \
+&&  rm -rf Hunyuan3D-2/.git \
+&&  pip install -r Hunyuan3D-2/requirements.txt --no-cache-dir \
+&&  pip install -e Hunyuan3D-2/ --no-cache-dir \
+&&  TORCH_CUDA_ARCH_LIST="8.9+PTX" pip install -e Hunyuan3D-2/hy3dgen/texgen/custom_rasterizer --no-cache-dir \
+&&  apt-get update \
+&&  apt-get install -y libgl1-mesa-glx \
+&&  rm -rf /var/lib/apt/lists/*
